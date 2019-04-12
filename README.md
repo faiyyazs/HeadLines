@@ -26,8 +26,7 @@ Third party
 
 ## Screenshots
 
-<img src="https://raw.githubusercontent.com/faiyyazs/HeadLines/master/screenshots/device-2019-04-12-132309.png" alt="drawing" width="200"/>
-<img src="https://raw.githubusercontent.com/faiyyazs/HeadLines/master/screenshots/device-2019-04-12-132438.png" alt="drawing" width="200"/>
+<img src="https://raw.githubusercontent.com/faiyyazs/HeadLines/master/screenshots/device-2019-04-12-132309.png" alt="drawing" width="200"/><img src="https://raw.githubusercontent.com/faiyyazs/HeadLines/master/screenshots/device-2019-04-12-132438.png" alt="drawing" width="200"/>
 
 ## How to generate code coverage report ?
 
