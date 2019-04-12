@@ -1,0 +1,172 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
+apply plugin: 'org.sonarqube'
+apply plugin: 'jacoco'
+
+
+
+jacoco {
+    toolVersion = "0.8.1"
+}
+
+tasks.withType(Test) {
+    jacoco.includeNoLocationClasses = true
+}
+
+def instrumentFileName = ""
+
+task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'createDebugCoverageReport']) {
+
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+
+    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
+    def debugTree = fileTree(dir: "$project.buildDir/intermediates/classes/debug", excludes: fileFilter)
+    def mainSrc = "$project.projectDir/src/main/java"
+
+    sourceDirectories = files([mainSrc])
+    classDirectories = files([debugTree])
+    executionData = fileTree(dir: project.buildDir, includes: [
+            'jacoco/testDebugUnitTest.exec', 'outputs/code_coverage/connected/*coverage.ec'
+    ])
+
+    def files = fileTree("$project.buildDir/outputs/code_coverage/connected/").filter {
+        it.isFile()
+    }.files.name
+    instrumentFileName = "$project.buildDir/outputs/code_coverage/connected/"+files[0]
+
+}
+
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        applicationId "com.headlines"
+        minSdkVersion 19
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+
+
+    buildTypes {
+
+        debug {
+            testCoverageEnabled true
+        }
+
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+
+    dataBinding {
+        enabled = true
+    }
+
+
+
+    testOptions {
+        unitTests.all {
+            jacoco {
+                includeNoLocationClasses = true
+            }
+        }
+    }
+
+    sonarqube{
+        // https://overflow.buffer.com/2017/01/16/android-test-sonarqube/
+        properties {
+            property "sonar.projectKey", "com.headlines"
+            property "sonar.login", "97ff3bb6fa63f8266f594364b1132ace9ae07923"
+            property "sonar.language","java"
+            property "sonar.sourceEncoding", "UTF-8"
+            property "sonar.sources", "src/main/java"
+            property "sonar.projectName", "Headlines" // Name of your project
+            property "sonar.projectVersion", "1.0" // Version of your project
+            property "sonar.projectDescription", "Headlines Most popular news feeds"
+            property "sonar.tests", "src/test/, src/androidTest/"
+            property "sonar.dynamicAnalysis", "reuseReports"
+            property "sonar.junit.reportsPath", "build/test-results/testDebugUnitTest"
+            property "sonar.java.coveragePlugin", "jacoco"
+            property "sonar.jacoco.reportPaths", "build/jacoco/testDebugUnitTest.exec"
+            property "sonar.jacoco.itreportPath", instrumentFileName
+
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.1.0-alpha03'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation "androidx.recyclerview:recyclerview:1.1.0-alpha03"
+
+
+    // ViewModel and LiveData
+    implementation "androidx.lifecycle:lifecycle-extensions:2.0.0"
+
+
+    // RxJava / RxAndroid
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.10'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
+
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation "androidx.arch.core:core-testing:2.0.0"
+
+    androidTestImplementation 'androidx.test:runner:1.1.2-alpha02'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0-alpha02'
+    androidTestImplementation "androidx.test.espresso:espresso-contrib:3.1.1"
+    androidTestImplementation "androidx.test.espresso:espresso-intents:3.1.1"
+    androidTestImplementation 'androidx.test:runner:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+    androidTestImplementation 'androidx.test:rules:1.1.1'
+    androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
+
+
+
+    // Local database
+    implementation "androidx.room:room-runtime:$rootProject.roomVersion"
+    annotationProcessor "androidx.room:room-compiler:$rootProject.roomVersion"
+
+
+    //Remote Api
+    implementation 'com.squareup.retrofit2:retrofit:2.5.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.12.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.12.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+
+    debugImplementation 'im.dino:dbinspector:3.4.1@aar'
+    implementation 'org.jsoup:jsoup:1.11.3'
+
+    implementation 'com.github.bumptech.glide:glide:4.9.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
+
+    androidTestImplementation 'com.android.support:support-annotations:28.0.0'
+    testImplementation 'org.mockito:mockito-core:2.10.0'
+
+}
+repositories {
+    mavenCentral()
+    google()
+    jcenter()
+
+}
+
+
+

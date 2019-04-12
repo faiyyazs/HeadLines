@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="feed"
+            type="com.headlines.data.entities.FeedsEntityWithMedia" />
+    </data>
+
+
+    <androidx.cardview.widget.CardView
+        app:cardElevation="0dp"
+        app:cardBackgroundColor="@color/colorCardBackground"
+        app:cardCornerRadius="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+
+            android:background="@color/colorCardBackground"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ScrollView
+                android:id="@+id/content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:padding="18dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_alignParentTop="true"
+                    android:transitionName="newsFeedTitle"
+                    android:padding="8dp"
+                    android:id="@+id/titleTxt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{feed.feedsEntity.title}"
+                    android:textSize="21sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorTextBlack"
+                    android:typeface="sans" />
+
+
+
+                <ImageView
+                    android:scaleType="center"
+                    android:padding="8dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_below="@+id/titleTxt"
+                    android:id="@+id/image"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    app:url="@{feed.mediaEntity.get(0).url}"/>
+
+
+
+                <TextView
+                    android:layout_below="@+id/image"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
+                    android:layout_marginTop="2dp"
+                    android:id="@+id/updatedDate"
+                    android:layout_alignParentRight="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:timeFormat="@{true}"
+                    app:formattedDate="@{feed.feedsEntity.lastUpdated}"
+                    android:textSize="12sp"
+                    android:textStyle="italic"
+                    android:textColor="@color/colorTextGrey"
+                    />
+
+                <TextView
+                    android:layout_below="@+id/updatedDate"
+                    android:padding="12dp"
+                    android:layout_marginTop="5dp"
+                    android:id="@+id/titleDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@{feed.feedsEntity.brief}"
+                    android:textSize="16sp"
+                    android:textColor="@color/colorTextGrey"
+                    />
+
+
+            </RelativeLayout>
+            </ScrollView>
+
+        <ProgressBar
+            android:layout_centerInParent="true"
+            android:id="@+id/loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Base.Widget.AppCompat.ProgressBar"/>
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+</layout>

@@ -1,0 +1,19 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="im.dino.dbview.DbViewActivity">
+
+    <!--<item
+        android:title="@string/newsFeed"
+        android:orderInCategory="100"
+        android:icon="@drawable/feeds"
+        app:showAsAction="always"/>
+-->
+
+    <item
+        android:id="@+id/loading"
+        android:title="@string/newsFeed"
+        android:orderInCategory="100"
+        android:icon="@drawable/feeds"
+        app:showAsAction="always"/>
+</menu>
